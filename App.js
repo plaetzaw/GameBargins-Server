@@ -10,6 +10,13 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
+//JWT
+const { authUser } = require("./utility/auth");
+
+//Routes
+app.use(require("./routes/register"));
+app.use(require("./routes/login"));
+
 app.listen(PORT, () => {
   console.log(`Listening on port ${PORT}`);
 });
