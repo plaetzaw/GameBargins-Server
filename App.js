@@ -17,6 +17,8 @@ const { authUser } = require("./utility/auth");
 app.use(require("./routes/register"));
 app.use(require("./routes/login"));
 app.use(require("./routes/createGameEntry"));
+app.use(require("./routes/searchTitle"));
+app.use(require("./routes/setAlert"));
 
 app.listen(PORT, () => {
   console.log(`Listening on port ${PORT}`);
