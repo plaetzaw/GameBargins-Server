@@ -11,7 +11,7 @@ module.exports = {
       title: {
         type: Sequelize.STRING
       },
-      metacriticlink: {
+      metacriticLink: {
         type: Sequelize.STRING
       },
       dealID: {
@@ -23,43 +23,43 @@ module.exports = {
       gameID: {
         type: Sequelize.INTEGER
       },
-      saleprice: {
-        type: Sequelize.INTEGER
+      salePrice: {
+        type: Sequelize.FLOAT
       },
-      normalprice: {
-        type: Sequelize.INTEGER
+      normalPrice: {
+        type: Sequelize.FLOAT
       },
-      isonsale: {
+      isOnSale: {
         type: Sequelize.BOOLEAN
       },
       savings: {
+        type: Sequelize.FLOAT
+      },
+      metacriticScore: {
         type: Sequelize.INTEGER
       },
-      metacriticscore: {
-        type: Sequelize.INTEGER
-      },
-      steamratingtext: {
+      steamRatingText: {
         type: Sequelize.STRING
       },
-      steamratingpercent: {
+      steamRatingPercent: {
         type: Sequelize.INTEGER
       },
-      streamratingcount: {
+      steamRatingCount: {
         type: Sequelize.INTEGER
       },
-      steamID: {
+      steamAppID: {
         type: Sequelize.INTEGER
       },
-      releasedate: {
+      releaseDate: {
         type: Sequelize.INTEGER
       },
-      lastchange: {
+      lastChange: {
         type: Sequelize.INTEGER
       },
-      dealrating: {
-        type: Sequelize.INTEGER
+      dealRating: {
+        type: Sequelize.FLOAT
       },
-      thumbnail: {
+      thumb: {
         type: Sequelize.STRING
       },
       createdAt: {

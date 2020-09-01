@@ -3,9 +3,9 @@
 module.exports = {
   up: (queryInterface, Sequelize) => {
     return queryInterface.addConstraint("games", {
-      fields: ["gameID"],
+      fields: ["userID"],
       type: "FOREIGN KEY",
-      name: "addfktogameID",
+      name: "addforeignkeytouserID",
       references: {
         table: "users",
         field: "id",
@@ -14,6 +14,6 @@ module.exports = {
   },
 
   down: (queryInterface, Sequelize) => {
-    return queryInterface.removeConstraint("users", "addfktogameID");
+    return queryInterface.removeConstraint("users", "addforeignkeytouserID");
   },
 };
