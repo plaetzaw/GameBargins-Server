@@ -19,6 +19,7 @@ app.use(require("./routes/login"));
 app.use(require("./routes/createGameEntry"));
 app.use(require("./routes/searchTitle"));
 app.use(require("./routes/setAlert"));
+app.use(require("./routes/viewSavedGames"));
 
 app.listen(PORT, () => {
   console.log(`Listening on port ${PORT}`);
