@@ -6,6 +6,7 @@ const db = require("../models");
 router.use(bodyParser.urlencoded({ extended: false }));
 
 router.post("/viewSavedGames", (req, res) => {
+  console.log(req.body);
   const userID = req.body.userID;
   console.log(userID);
 
@@ -16,9 +17,11 @@ router.post("/viewSavedGames", (req, res) => {
       },
     })
     .then((savedGames) => {
-      res.sendStatus(200).json(savedGames);
+      res.status(200).json(savedGames);
     })
-    .catch((err) => console.err(err));
+    .catch((err) => {
+      console.log(err);
+    });
 });
 
 module.exports = router;
