@@ -9,15 +9,15 @@ const jwt = require("jsonwebtoken");
 router.use(bodyParser.urlencoded({ extended: false }));
 
 router.post("/login", (req, res) => {
-  let email = req.body.email;
-  console.log(email);
+  let username = req.body.username;
+  console.log(username);
   let password = req.body.password;
   console.log(password);
 
   db.users
     .findOne({
       where: {
-        email: email,
+        username: username,
       },
     })
     .then((persistUser) => {
@@ -29,11 +29,11 @@ router.post("/login", (req, res) => {
               let token = jwt.sign(
                 {
                   id: persistUser.id,
-                  email: persistUser.email,
+                  username: persistUser.username,
                 },
                 process.env.JWT_SECRET,
                 {
-                  expiresIn: "1h",
+                  expiresIn: "4h",
                 }
               );
 

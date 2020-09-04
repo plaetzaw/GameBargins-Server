@@ -17,14 +17,13 @@ router.post("/register", (req, res) => {
   db.users
     .findOne({
       where: {
-        email: email,
+        username: username,
       },
     })
     .then((user) => {
       if (user) {
-        console.log("email already exists"); // MUST INCLUDE A RESPONSE FOR THE SERVER TO REPLY TO THE CLIENT WITH
-        // make sure you return a res from the server to kill this process. Console logging does not kill the process
-        res.status(500).json({ message: "Email already exists" });
+        console.log("username already exists");
+        res.status(500).json({ message: "username already exists" });
       } else {
         db.users
           .findOne({
@@ -37,7 +36,6 @@ router.post("/register", (req, res) => {
             if (user2) {
               console.log("email already exists");
               res.status(500).json({ message: "email already exists" });
-              // make sure you return a res from the server to kill this process. Console logging does not kill the process
             } else {
               bcrypt.hash(password, SALT).then((hash) => {
                 console.log("hashing password....");
