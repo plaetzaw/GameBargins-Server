@@ -15,7 +15,7 @@ router.post("/searchTitle", (req, res) => {
     .get(apiURL)
     .then((results) => {
       console.log(results);
-      res.sendStatus(200).json({ message: `Results for ${gameTitle}!` });
+      res.status(200).json(results);
     })
     .catch((err) => console.error(err));
 });
