@@ -28,6 +28,32 @@ router.post("/createGameEntry", async (req, res) => {
 
   console.log(userID);
 
+  let reviews = req.body.steamRatingPercent;
+
+  const steamReviewChecker = (reviews) => {
+    if (reviews === 0) {
+      return "false";
+    } else {
+      return "true";
+    }
+  };
+
+  const steamCheckerBool = steamReviewChecker(reviews);
+
+  let score = req.body.metacriticScore;
+
+  const metacriticScoreColor = (score) => {
+    if (score > 80) {
+      return "green";
+    } else if (80 > score > 61) {
+      return "yellow";
+    } else {
+      return "red";
+    }
+  };
+
+  const scoreColor = metacriticScoreColor(score);
+
   try {
     let newGame = await db.games.build({
       title: title,
@@ -49,6 +75,8 @@ router.post("/createGameEntry", async (req, res) => {
       dealRating: dealRating,
       thumb: thumb,
       userID: userID,
+      steamCheckerBool: steamCheckerBool,
+      scoreColor: scoreColor,
     });
 
     let savedGame = await newGame.save();

@@ -17,32 +17,6 @@ router.post("/viewSavedGames", (req, res) => {
       },
     })
     .then((games) => {
-      // let reviews = savedGames.steamRatingCount;
-
-      // const steamReviewChecker = (reviews) => {
-      //   if (reviews === 0) {
-      //     return "false";
-      //   } else {
-      //     return "true";
-      //   }
-      // };
-
-      // let steamBool = steamReviewChecker(reviews);
-
-      // let score = savedGames.metacriticScore;
-
-      // const metacriticScoreColor = (score) => {
-      //   if (score > 80) {
-      //     return "green";
-      //   } else if (80 > score > 61) {
-      //     return "yellow";
-      //   } else {
-      //     return "red";
-      //   }
-      // };
-
-      // let scoreColor = metacriticScoreColor(score);
-
       res.status(200).json(games);
     })
     .catch((err) => {

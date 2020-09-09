@@ -22,6 +22,8 @@ module.exports = (sequelize, DataTypes) => {
       dealRating: DataTypes.FLOAT,
       thumb: DataTypes.STRING,
       userID: DataTypes.INTEGER,
+      steamCheckerBool: DataTypes.BOOLEAN,
+      scoreColor: DataTypes.STRING,
     },
     {}
   );

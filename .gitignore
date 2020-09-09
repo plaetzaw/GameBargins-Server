@@ -3,3 +3,5 @@ node_modules
 /config/config.json
 
 .env
+
+20200901171841-addforeignkeytouserID.js
