@@ -28,10 +28,12 @@ router.post("/createGameEntry", async (req, res) => {
 
   console.log(userID);
 
-  let reviews = req.body.steamRatingPercent;
+  let reviews = req.body.steamRatingCount;
+
+  console.log(reviews);
 
   const steamReviewChecker = (reviews) => {
-    if (reviews === 0) {
+    if (reviews < 1) {
       return "false";
     } else {
       return "true";
@@ -39,6 +41,8 @@ router.post("/createGameEntry", async (req, res) => {
   };
 
   const steamCheckerBool = steamReviewChecker(reviews);
+
+  console.log(steamCheckerBool);
 
   let score = req.body.metacriticScore;
 
