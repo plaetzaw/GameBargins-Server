@@ -15,9 +15,9 @@ router.post("/searchTitle", (req, res) => {
   axios
     .get(apiURL)
     .then((results) => {
-      console.log(results);
+      // console.log(results);
       let gameJSON = CircularJSON.stringify(results);
-      console.log(gameJSON);
+      // console.log(gameJSON);
       res.status(200).json(gameJSON);
     })
     .catch((err) => console.error(err));
