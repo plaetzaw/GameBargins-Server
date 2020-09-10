@@ -26,8 +26,6 @@ router.post("/createGameEntry", async (req, res) => {
   const thumb = req.body.thumb;
   const userID = req.body.userID;
 
-  console.log(userID);
-
   let reviews = req.body.steamRatingCount;
 
   console.log(reviews);
