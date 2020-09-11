@@ -7,7 +7,6 @@ router.use(bodyParser.urlencoded({ extended: false }));
 
 router.post("/deleteFavorite", (req, res) => {
   let id = req.body.id;
-  console.log(id);
 
   db.games
     .destroy({
