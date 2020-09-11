@@ -30,6 +30,7 @@ router.post("/login", (req, res) => {
                 {
                   id: persistUser.id,
                   username: persistUser.username,
+                  email: persistUser.email,
                 },
                 process.env.JWT_SECRET,
                 {
