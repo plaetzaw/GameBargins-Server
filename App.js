@@ -23,6 +23,7 @@ app.use(require("./routes/viewSavedGames"));
 app.use(require("./routes/deleteFavorite"));
 app.use(require("./routes/userSettings"));
 app.use(require("./routes/userInfo"));
+app.use(require("./routes/advancedSearch"));
 
 app.listen(PORT, () => {
   console.log(`Listening on port ${PORT}`);
