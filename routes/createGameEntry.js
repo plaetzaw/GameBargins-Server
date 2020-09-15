@@ -44,10 +44,13 @@ router.post("/createGameEntry", async (req, res) => {
 
   let score = req.body.metacriticScore;
 
+  console.log(score);
   const metacriticScoreColor = (score) => {
-    if (score > 80) {
+    if (score > 89) {
+      return "lightgreen";
+    } else if (90 > score && score > 75) {
       return "green";
-    } else if (80 > score > 61) {
+    } else if (75 > score && score > 51) {
       return "yellow";
     } else {
       return "red";
@@ -55,6 +58,7 @@ router.post("/createGameEntry", async (req, res) => {
   };
 
   const scoreColor = metacriticScoreColor(score);
+  console.log(scoreColor);
 
   try {
     let newGame = await db.games.build({
@@ -66,7 +70,7 @@ router.post("/createGameEntry", async (req, res) => {
       salePrice: parseFloat(salePrice),
       normalPrice: parseFloat(normalPrice),
       isOnSale: isOnSale,
-      savings: savings,
+      savings: parseFloat(savings).toFixed(2),
       metacriticScore: metacriticScore,
       steamRatingText: steamRatingText,
       steamRatingPercent: steamRatingPercent,
@@ -83,7 +87,6 @@ router.post("/createGameEntry", async (req, res) => {
 
     let savedGame = await newGame.save();
 
-    console.log(savedGame);
     res.status(200).json({ message: "OK", savedGame });
   } catch (e) {
     res.status(500).json({ message: "An error has occured", error: e });

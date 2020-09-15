@@ -17,7 +17,7 @@ router.post("/setAlert", (req, res) => {
     .then((newAlert) => {
       console.log(newAlert);
       res
-        .sendStatus(200)
+        .status(200)
         .json({ message: `Alert set for ${gameID} at ${price} to ${email}` });
     })
     .catch((err) => console.error(err));
