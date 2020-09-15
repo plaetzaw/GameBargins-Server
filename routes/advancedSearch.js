@@ -9,14 +9,25 @@ router.use(bodyParser.urlencoded({ extended: false }));
 
 router.post("/advancedSearch", (req, res) => {
   let gameTitle = req.body.gameTitle;
-  let maxPrice = req.body.maxPrice;
+  let maxPrice = req.body.value;
   let onSale = req.body.checked;
 
   console.log(gameTitle);
   console.log(maxPrice);
   console.log(onSale);
 
-  let apiURL = `https://www.cheapshark.com/api/1.0/deals?title=${gameTitle}&maxPrice=${maxPrice}&`;
+  const onSaleChecker = (onSale) => {
+    if (onSale === true) {
+      return 1;
+    } else {
+      return 0;
+    }
+  };
+
+  const onSaleBool = onSaleChecker(onSale);
+  console.log(onSaleBool);
+
+  let apiURL = `https://www.cheapshark.com/api/1.0/deals?title=${gameTitle}&upperPrice=${maxPrice}&onSale=${onSaleBool}`;
 
   axios
     .get(apiURL)
