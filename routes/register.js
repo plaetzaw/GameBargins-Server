@@ -9,11 +9,8 @@ router.use(bodyParser.urlencoded({ extended: false }));
 
 router.post("/register", (req, res) => {
   let username = req.body.username;
-  console.log(username);
   let email = req.body.email;
-  console.log(email);
   let password = req.body.password;
-  console.log(password);
   db.users
     .findOne({
       where: {

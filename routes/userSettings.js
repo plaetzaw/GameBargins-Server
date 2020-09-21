@@ -8,101 +8,80 @@ let db = require("../models");
 
 router.use(bodyParser.urlencoded({ extended: false }));
 
-router.post("/updateUsername", (req, res) => {
+router.post("/updateUsername", async (req, res) => {
   let id = req.body.id;
   let username = req.body.username;
   let updatedusername = req.body.updatedusername;
-  console.log(id);
-  console.log(username);
-  console.log(updatedusername);
 
-  db.users
-    .findOne({
-      where: {
-        id: id,
-      },
-    })
-    .then(() => {
-      db.users
-        .findOne({
-          where: {
-            username: updatedusername,
-          },
-        })
-        .then((updateUser) => {
-          if (updateUser) {
-            console.log("username already exists");
-            res.status(500).json({ message: "username already exists" });
-          } else {
-            let newusername = {
-              username: updatedusername,
-            };
-            newusername
-              .save()
-              .then(() => {
-                console.log("Updated username in database");
-                res.status(200).json({ message: "username has been updated!" });
-              })
-              .catch((err) => console.log(err));
-          }
-        });
+  try {
+    let persistUser = await db.users.findOne({
+      where: { id },
     });
+
+    if (persistUser) {
+      persistUser.username = updatedusername;
+
+      await persistUser.save({
+        fields: ["username"],
+      });
+
+      res
+        .status(200)
+        .json({ message: `Success, your new username is ${username}` });
+    } else res.status(500).json({ message: "Something went wrong" });
+  } catch (e) {
+    console.error(e);
+    res.status(500).json({ error: e });
+  }
 });
 
-router.post("/updateEmail", (req, res) => {
+router.post("/updateEmail", async (req, res) => {
   let id = req.body.id;
-  let email = req.body.email;
-  console.log(email);
+  let updatedemail = req.body.email;
 
-  db.users
-    .findOne({
-      where: {
-        id: id,
-      },
-    })
-    .then(() => {
-      db.users
-        .findOne({
-          where: {
-            email: email,
-          },
-        })
-        .then((newEmail) => {
-          if (email) {
-            console.log("email already exists, please select another");
-            res
-              .status(500)
-              .json({ message: "email already exists, please select another" });
-          } else {
-            newEmail.email = email;
-            email
-              .save()
-              .then(() => {
-                console.log("Updated email in database");
-                res.status(200);
-              })
-              .catch((err) => console.log(err));
-          }
-        });
+  try {
+    let persistUser = await db.users.findOne({
+      where: { id },
     });
+
+    if (persistUser) {
+      persistUser.email = updatedemail;
+
+      await persistUser.save({
+        fields: ["email"],
+      });
+
+      res.status(200).json({ message: `Success, your email has been updated` });
+    } else res.status(500).json({ message: "Something went wrong" });
+  } catch (e) {
+    console.error(e);
+    res.status(500).json({ error: e });
+  }
 });
 
-router.post("/updatePassword", (req, res) => {
+router.post("/updatePassword", async (req, res) => {
   let id = req.body.id;
   let password = req.body.password;
-  console.log(password);
 
-  db.users
-    .findOne({
-      where: {
-        email: email,
-      },
-    })
-    .then((newPassword) => {
-      bcrypt.hash(password, SALT).then((hash) => {
-        //I'm slightly confused how to do this
-      });
+  try {
+    let persistUser = await db.users.findOne({
+      where: { id },
     });
+    if (persistUser) {
+      let newpassword = await bcrypt.hash(password, SALT);
+      persistUser.password = newpassword;
+
+      await persistUser.save({
+        fields: ["password"],
+      });
+      res
+        .status(200)
+        .json({ message: `Success, your password has been updated` });
+    } else res.status(500).json({ message: "Something went wrong" });
+  } catch (e) {
+    console.error(e);
+    res.status(500).json({ error: e });
+  }
 });
 
 module.exports = router;

@@ -10,9 +10,7 @@ router.use(bodyParser.urlencoded({ extended: false }));
 
 router.post("/login", (req, res) => {
   let username = req.body.username;
-  console.log(username);
   let password = req.body.password;
-  console.log(password);
 
   db.users
     .findOne({

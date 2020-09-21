@@ -40,8 +40,6 @@ router.post("/createGameEntry", async (req, res) => {
 
   const steamCheckerBool = steamReviewChecker(reviews);
 
-  console.log(steamCheckerBool);
-
   let score = req.body.metacriticScore;
 
   console.log(score);
@@ -58,7 +56,6 @@ router.post("/createGameEntry", async (req, res) => {
   };
 
   const scoreColor = metacriticScoreColor(score);
-  console.log(scoreColor);
 
   try {
     let newGame = await db.games.build({

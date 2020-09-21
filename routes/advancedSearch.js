@@ -12,10 +12,6 @@ router.post("/advancedSearch", (req, res) => {
   let maxPrice = req.body.value;
   let onSale = req.body.checked;
 
-  console.log(gameTitle);
-  console.log(maxPrice);
-  console.log(onSale);
-
   const onSaleChecker = (onSale) => {
     if (onSale === true) {
       return 1;
@@ -25,7 +21,6 @@ router.post("/advancedSearch", (req, res) => {
   };
 
   const onSaleBool = onSaleChecker(onSale);
-  console.log(onSaleBool);
 
   let apiURL = `https://www.cheapshark.com/api/1.0/deals?title=${gameTitle}&upperPrice=${maxPrice}&onSale=${onSaleBool}`;
 
