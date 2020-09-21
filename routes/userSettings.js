@@ -11,7 +11,10 @@ router.use(bodyParser.urlencoded({ extended: false }));
 router.post("/updateUsername", (req, res) => {
   let id = req.body.id;
   let username = req.body.username;
+  let updatedusername = req.body.updatedusername;
+  console.log(id);
   console.log(username);
+  console.log(updatedusername);
 
   db.users
     .findOne({
@@ -23,20 +26,22 @@ router.post("/updateUsername", (req, res) => {
       db.users
         .findOne({
           where: {
-            username: username,
+            username: updatedusername,
           },
         })
-        .then((newUsername) => {
-          if (username) {
+        .then((updateUser) => {
+          if (updateUser) {
             console.log("username already exists");
             res.status(500).json({ message: "username already exists" });
           } else {
-            newUsername.username = username;
-            newUsername
+            let newusername = {
+              username: updatedusername,
+            };
+            newusername
               .save()
               .then(() => {
                 console.log("Updated username in database");
-                res.status(200);
+                res.status(200).json({ message: "username has been updated!" });
               })
               .catch((err) => console.log(err));
           }
@@ -70,7 +75,7 @@ router.post("/updateEmail", (req, res) => {
               .json({ message: "email already exists, please select another" });
           } else {
             newEmail.email = email;
-            newEmail
+            email
               .save()
               .then(() => {
                 console.log("Updated email in database");
