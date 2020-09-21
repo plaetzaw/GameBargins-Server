@@ -15,15 +15,15 @@ const { authUser } = require("./utility/auth");
 
 //Routes
 app.use(require("./routes/register"));
-app.use(require("./routes/login"));
-app.use(require("./routes/createGameEntry"));
-app.use(require("./routes/searchTitle"));
-app.use(require("./routes/setAlert"));
-app.use(require("./routes/viewSavedGames"));
-app.use(require("./routes/deleteFavorite"));
-app.use(require("./routes/userSettings"));
-app.use(require("./routes/userInfo"));
-app.use(require("./routes/advancedSearch"));
+app.use(require("./routes/login", authUser));
+app.use(require("./routes/createGameEntry", authUser));
+app.use(require("./routes/searchTitle", authUser));
+app.use(require("./routes/setAlert", authUser));
+app.use(require("./routes/viewSavedGames", authUser));
+app.use(require("./routes/deleteFavorite", authUser));
+app.use(require("./routes/userSettings", authUser));
+app.use(require("./routes/userInfo", authUser));
+app.use(require("./routes/advancedSearch", authUser));
 
 app.listen(PORT, () => {
   console.log(`Listening on port ${PORT}`);
