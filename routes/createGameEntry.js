@@ -28,8 +28,6 @@ router.post("/createGameEntry", async (req, res) => {
 
   let reviews = req.body.steamRatingCount;
 
-  console.log(reviews);
-
   const steamReviewChecker = (reviews) => {
     if (reviews < 1) {
       return "false";
@@ -42,7 +40,6 @@ router.post("/createGameEntry", async (req, res) => {
 
   let score = req.body.metacriticScore;
 
-  console.log(score);
   const metacriticScoreColor = (score) => {
     if (score > 89) {
       return "lightgreen";
