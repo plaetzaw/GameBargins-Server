@@ -11,6 +11,28 @@ router.post("/advancedSearch", (req, res) => {
   let gameTitle = req.body.gameTitle;
   let maxPrice = req.body.value;
   let onSale = req.body.checked;
+  let sort = req.body.sort;
+
+  switch (sort) {
+    case 1:
+      sort = "Price";
+      break;
+    case 2:
+      sort = "Game Title";
+      break;
+    case 3:
+      sort = "Savings";
+      break;
+    case 4:
+      sort = "Deal Rating";
+      break;
+    case 5:
+      sort = "Store";
+      break;
+    default:
+      sort = "Price";
+  }
+  console.log(sort);
 
   const onSaleChecker = (onSale) => {
     if (onSale === true) {
@@ -22,7 +44,7 @@ router.post("/advancedSearch", (req, res) => {
 
   const onSaleBool = onSaleChecker(onSale);
 
-  let apiURL = `https://www.cheapshark.com/api/1.0/deals?title=${gameTitle}&upperPrice=${maxPrice}&onSale=${onSaleBool}`;
+  let apiURL = `https://www.cheapshark.com/api/1.0/deals?title=${gameTitle}&upperPrice=${maxPrice}&onSale=${onSaleBool}&sortBy=${sort}`;
 
   axios
     .get(apiURL)

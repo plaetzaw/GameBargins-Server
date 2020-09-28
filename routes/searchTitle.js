@@ -21,4 +21,18 @@ router.post("/searchTitle", (req, res) => {
     .catch((err) => console.error(err));
 });
 
+router.post("/searchSingleResultTitle", (req, res) => {
+  let gameTitle = req.body.gameTitle;
+
+  let apiURL = `https://www.cheapshark.com/api/1.0/games?title=${gameTitle}`;
+  axios
+    .get(apiURL)
+    .then((results) => {
+      let gameJSON = CircularJSON.stringify(results.data);
+      console.log(gameJSON);
+      res.status(200).send(gameJSON);
+    })
+    .catch((err) => console.error(err));
+});
+
 module.exports = router;
