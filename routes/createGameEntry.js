@@ -123,83 +123,82 @@ router.post("/createGameEntry", async (req, res) => {
 
 router.post("/getInfoAndSave", async (req, res) => {
   let id = req.body.cheapestDealID;
-  const userID = req.body.userID;
 
   let apiURL = `https://www.cheapshark.com/api/1.0/deals?id=${id}`;
 
-  axios.post(apiURL).then((results) => {
-    console.log(results.data).then((data) => {});
-  });
-
-  const title = data.gameInfo.title;
-  const metacriticLink = data.gameInfo.metacriticLink;
-  const dealID = data.gameInfo.dealID;
-  const storeID = data.gameInfo.storeID;
-  const gameID = data.gameInfo.gameID;
-  const salePrice = data.gameInfo.salePrice;
-  const normalPrice = data.gameInfo.normalPrice;
-  const isOnSale = data.gameInfo.isOnSale;
-  const savings = data.gameInfo.savings;
-  const metacriticScore = data.gameInfo.metacriticScore;
-  const steamRatingText = data.gameInfo.steamRatingText;
-  const steamRatingPercent = data.gameInfo.steamRatingPercent;
-  const steamRatingCount = data.gameInfo.steamRatingCount;
-  const steamAppID = data.gameInfo.steamAppID;
-  const releaseDate = data.gameInfo.releaseDate;
-  const lastChange = data.gameInfo.lastChange;
-  const dealRating = data.gameInfo.dealRating;
-  const thumb = data.gameInfo.thumb;
-
-  // const isOnSaleChecker = (isOnSale) => {
-  //   if (isOnSale === null) {
-  //     if (salePrice < normalPrice) {
-  //       return true;
-  //     } else {
-  //       return false;
-  //     }
-  //   }
-  // };
-
-  // const isOnSaleBool = isOnSaleChecker(isOnSale);
-
-  // const savingsChecker = (savings) => {
-  //   if (savings === null) {
-  //     let verifiedSavings = salePrice / normalPrice;
-  //     return verifiedSavings;
-  //   }
-  // };
-
-  // const checkedSavings = savingsChecker(savings);
-
-  let reviews = req.body.steamRatingCount;
-
-  const steamReviewChecker = (reviews) => {
-    if (reviews < 1) {
-      return "false";
-    } else {
-      return "true";
-    }
-  };
-
-  const steamCheckerBool = steamReviewChecker(reviews);
-
-  let score = req.body.metacriticScore;
-
-  const metacriticScoreColor = (score) => {
-    if (score > 89) {
-      return "lightgreen";
-    } else if (90 > score && score > 75) {
-      return "green";
-    } else if (75 > score && score > 51) {
-      return "yellow";
-    } else {
-      return "red";
-    }
-  };
-
-  const scoreColor = metacriticScoreColor(score);
-
+  let results = await axios.get(apiURL);
+  console.log(results.data);
   try {
+    const userID = req.body.userID;
+    const title = results.data.gameInfo.name;
+    const metacriticLink = results.data.gameInfo.metacriticLink;
+    const dealID = id;
+    const storeID = results.data.gameInfo.storeID;
+    const gameID = results.data.gameInfo.gameID;
+    const salePrice = results.data.gameInfo.salePrice;
+    const normalPrice = results.data.gameInfo.retailPrice;
+    // const isOnSale = results.data.gameInfo.isOnSale;
+    const savings = normalPrice - salePrice;
+    const metacriticScore = results.data.gameInfo.metacriticScore;
+    const steamRatingText = results.data.gameInfo.steamRatingText;
+    const steamRatingPercent = results.data.gameInfo.steamRatingPercent;
+    const steamRatingCount = results.data.gameInfo.steamRatingCount;
+    const steamAppID = results.data.gameInfo.steamAppID;
+    const releaseDate = results.data.gameInfo.releaseDate;
+    const lastChange = results.data.gameInfo.lastChange;
+    const dealRating = results.data.gameInfo.dealRating;
+    const thumb = results.data.gameInfo.thumb;
+
+    console.log(normalPrice);
+    console.log(salePrice);
+    const isOnSale = (salePrice, normalPrice) => {
+      if (salePrice < normalPrice) {
+        return true;
+      } else {
+        return false;
+      }
+    };
+    const isOnSaleBool = isOnSale(salePrice, normalPrice);
+
+    const dealRatingChecker = (salePrice, normalPrice) => {
+      let deal = salePrice / normalPrice;
+      console.log(deal);
+      return deal;
+    };
+
+    const dealValue = dealRatingChecker(salePrice, normalPrice);
+    console.log(dealValue);
+
+    let reviews = req.body.steamRatingCount;
+
+    const steamReviewChecker = (reviews) => {
+      if (reviews < 1) {
+        return "false";
+      } else {
+        return "true";
+      }
+    };
+
+    const steamCheckerBool = steamReviewChecker(reviews);
+
+    let score = req.body.metacriticScore;
+
+    const metacriticScoreColor = (score) => {
+      if (score > 89) {
+        return "lightgreen";
+      } else if (90 > score && score > 75) {
+        return "green";
+      } else if (75 > score && score > 51) {
+        return "yellow";
+      } else {
+        return "red";
+      }
+    };
+
+    const scoreColor = metacriticScoreColor(score);
+
+    // move me to the end of the try-catch
+
     let newGame = await db.games.build({
       title: title,
       metacriticLink: metacriticLink,
@@ -208,7 +207,7 @@ router.post("/getInfoAndSave", async (req, res) => {
       gameID: gameID,
       salePrice: parseFloat(salePrice),
       normalPrice: parseFloat(normalPrice),
-      isOnSale: isOnSale,
+      isOnSale: isOnSaleBool,
       savings: parseFloat(savings).toFixed(2),
       metacriticScore: metacriticScore,
       steamRatingText: steamRatingText,
@@ -217,7 +216,7 @@ router.post("/getInfoAndSave", async (req, res) => {
       steamAppID: steamAppID,
       releaseDate: releaseDate,
       lastChange: lastChange,
-      dealRating: dealRating,
+      dealRating: dealValue,
       thumb: thumb,
       userID: userID,
       steamCheckerBool: steamCheckerBool,
