@@ -10,14 +10,16 @@ const db = require('../models')
 router.use(bodyParser.urlencoded({ extended: false }))
 
 router.post('/register', async (req, res) => {
-  // console.log('Beginning user registration')
+  console.log('Beginning user registration')
   try {
     const password = req.body.password
-    // console.log('starting pass', password)
+    console.log('starting pass', password)
     const hashedpassword = await bcrypt.hash(password, SALT)
-    // console.log('hashed pass', hashedpassword)
+    console.log('hashed pass', hashedpassword)
 
     const newUser = await db.users.build({
+    //   firstname: req.body.firstname,
+    //   lastname: req.body.lastname,
       username: req.body.username,
       email: req.body.email,
       password: hashedpassword
@@ -43,6 +45,7 @@ router.post('/login', async (req, res) => {
     })
     console.log(checkUser)
     if (checkUser) {
+      console.log('did we get here?')
       const checkPassword = await bcrypt.compare(password, checkUser.password)
       console.log('Password correct?', checkPassword)
       if (checkPassword === true) {
