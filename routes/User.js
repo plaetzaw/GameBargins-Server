@@ -11,17 +11,26 @@ router.use(bodyParser.urlencoded({ extended: false }))
 
 router.post('/register', async (req, res) => {
   console.log('Beginning user registration')
+  const email = req.body.email
   try {
+    const checkEmail = await db.users.findOne({
+      where: {
+        email
+      }
+    })
+    if (checkEmail) {
+      res.status(400).json({ message: 'EMAIL ALREADY EXSITS, PLEASE SELECT ANOTHER' })
+    }
     const password = req.body.password
     console.log('starting pass', password)
     const hashedpassword = await bcrypt.hash(password, SALT)
     console.log('hashed pass', hashedpassword)
 
     const newUser = await db.users.build({
-    //   firstname: req.body.firstname,
-    //   lastname: req.body.lastname,
+      //   firstname: req.body.firstname,
+      //   lastname: req.body.lastname,
       username: req.body.username,
-      email: req.body.email,
+      email: email,
       password: hashedpassword
     })
     const savedUser = newUser.save()
