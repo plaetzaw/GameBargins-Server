@@ -1,13 +1,13 @@
 exports.authUser = (req, res, next) => {
-  const header = req.headers["authorization"];
+  const header = req.headers.authorization
 
-  if (typeof header !== "undefined") {
-    const bearer = header.split(" ");
-    const token = bearer[1];
+  if (typeof header !== 'undefined') {
+    const bearer = header.split(' ')
+    const token = bearer[1]
 
-    req.token = token;
-    next();
+    req.token = token
+    next()
   } else {
-    res.sendStatus(403);
+    res.sendStatus(403)
   }
-};
+}
