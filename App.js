@@ -14,8 +14,7 @@ app.use(bodyParser.urlencoded({ extended: false }))
 const { authUser } = require('./utility/auth')
 
 // Routes
-app.use(require('./routes/register'))
-app.use(require('./routes/login', authUser))
+app.use(require('./routes/User'))
 app.use(require('./routes/createGameEntry', authUser))
 app.use(require('./routes/searchTitle', authUser))
 app.use(require('./routes/setAlert', authUser))
