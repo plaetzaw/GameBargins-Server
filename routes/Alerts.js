@@ -2,7 +2,7 @@ const express = require('express')
 const router = express.Router()
 const bodyParser = require('body-parser')
 const axios = require('axios')
-const db = require('../models')
+// const db = require('../models')
 
 router.use(bodyParser.urlencoded({ extended: false }))
 

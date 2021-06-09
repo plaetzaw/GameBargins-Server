@@ -2,7 +2,7 @@ const express = require('express')
 const router = express.Router()
 const bodyParser = require('body-parser')
 const axios = require('axios')
-const CircularJSON = require('circular-json')
+// const CircularJSON = require('circular-json')
 const db = require('../models')
 
 router.use(bodyParser.urlencoded({ extended: false }))
@@ -146,7 +146,7 @@ router.post('/getInfoAndSave', async (req, res) => {
     const steamAppID = results.data.gameInfo.steamAppID
     const releaseDate = results.data.gameInfo.releaseDate
     const lastChange = results.data.gameInfo.lastChange
-    const dealRating = results.data.gameInfo.dealRating
+    // const dealRating = results.data.gameInfo.dealRating
     const thumb = results.data.gameInfo.thumb
 
     console.log(normalPrice)
@@ -229,6 +229,40 @@ router.post('/getInfoAndSave', async (req, res) => {
   } catch (e) {
     res.status(500).json({ message: 'An error has occured', error: e })
   }
+})
+
+router.post('/viewSavedGames', (req, res) => {
+  console.log(req.body)
+  const userID = req.body.userID
+  console.log(userID)
+
+  db.games
+    .findAll({
+      where: {
+        userID: userID
+      }
+    })
+    .then((games) => {
+      res.status(200).json(games)
+    })
+    .catch((err) => {
+      console.log(err)
+    })
+})
+
+router.post('/deleteFavorite', (req, res) => {
+  const id = req.body.id
+
+  db.games
+    .destroy({
+      where: {
+        id: id
+      }
+    })
+    .then(() => {
+      res.status(200).json({ message: 'Game removed from favorites' })
+    })
+    .catch((err) => console.error(err))
 })
 
 module.exports = router
