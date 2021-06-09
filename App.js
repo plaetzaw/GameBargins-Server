@@ -14,16 +14,10 @@ app.use(bodyParser.urlencoded({ extended: false }))
 const { authUser } = require('./utility/auth')
 
 // Routes
-app.use(require('./routes/register'))
-app.use(require('./routes/login', authUser))
-app.use(require('./routes/createGameEntry', authUser))
-app.use(require('./routes/searchTitle', authUser))
-app.use(require('./routes/setAlert', authUser))
-app.use(require('./routes/viewSavedGames', authUser))
-app.use(require('./routes/deleteFavorite', authUser))
-app.use(require('./routes/userSettings', authUser))
-app.use(require('./routes/userInfo', authUser))
-app.use(require('./routes/advancedSearch', authUser))
+app.use(require('./routes/User'))
+app.use(require('./routes/Dashboard', authUser))
+app.use(require('./routes/Game', authUser))
+app.use(require('./routes/Alerts', authUser))
 
 app.listen(PORT, () => {
   console.log(`Listening on port ${PORT}`)
