@@ -7,7 +7,7 @@ const db = require('../models')
 
 router.use(bodyParser.urlencoded({ extended: false }))
 
-router.post('/createGameEntry', async (req, res) => {
+router.post('/createFavorite', async (req, res) => {
   const title = req.body.title
   const metacriticLink = req.body.metacriticLink
   const dealID = req.body.dealID
@@ -87,41 +87,9 @@ router.post('/createGameEntry', async (req, res) => {
   } catch (e) {
     res.status(500).json({ message: 'An error has occured', error: e })
   }
-
-  // let newGame = db.games.build({
-  //   title: title,
-  //   metacriticlink: metacriticlink,
-  //   dealID: dealID,
-  //   storeID: storeID,
-  //   gameID: gameID,
-  //   salePrice: salePrice,
-  //   normalPrice: normalPrice,
-  //   isOnSale: isOnSale,
-  //   savings: savings,
-  //   metacriticScore: metacriticScore,
-  //   steamRatingText: steamRatingText,
-  //   steamRatingPercent: steamRatingPercent,
-  //   steamRatingCount: steamRatingCount,
-  //   steamID: steamID,
-  //   releaseDate: releaseDate,
-  //   lastChange: lastChange,
-  //   dealRating: dealRating,
-  //   thumb: thumb,
-  //   userID: userID,
-  // });
-
-  // newGame
-  //   .save()
-  //   .then(() => {
-  //     console.log("Saving game to the database");
-  //     res.sendStatus(200);
-  //   })
-  //   .catch((err) => {
-  //     console.error(err);
-  //   });
 })
 
-router.post('/getInfoAndSave', async (req, res) => {
+router.post('/getInfoAndFavorite', async (req, res) => {
   const id = req.body.cheapestDealID
 
   const apiURL = `https://www.cheapshark.com/api/1.0/deals?id=${id}`
@@ -231,7 +199,7 @@ router.post('/getInfoAndSave', async (req, res) => {
   }
 })
 
-router.post('/viewSavedGames', (req, res) => {
+router.post('/viewFavorites', (req, res) => {
   console.log(req.body)
   const userID = req.body.userID
   console.log(userID)

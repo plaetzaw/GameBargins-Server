@@ -7,6 +7,24 @@ const CircularJSON = require('circular-json')
 
 router.use(bodyParser.urlencoded({ extended: false }))
 
+router.post('/getStores', async (req, res) => {
+  const apiURL = 'https://www.cheapshark.com/api/1.0/stores'
+
+  try {
+    const stores = await axios.get(apiURL)
+    const activestores = stores.data.filter(store => (store.isActive === 1))
+    console.log(activestores)
+
+    // const activestores = stores.filter(store => store.isActive === 1)
+    // console.log(activestores)
+    // const storeresults = CircularJSON.stringify(stores.data)
+    res.status(200).send(activestores)
+  } catch (e) {
+    console.log(e)
+    res.status(500).json({ message: 'AN UNKNOWN ERROR HAS OCCURED', error: e })
+  }
+})
+
 router.post('/searchTitle', (req, res) => {
   const gameTitle = req.body.gameTitle
 

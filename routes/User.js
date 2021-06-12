@@ -35,7 +35,7 @@ router.post('/register', async (req, res) => {
     })
     const savedUser = newUser.save()
 
-    res.status(200).json({ message: 'New User Created', savedUser })
+    res.status(200).json({ message: 'New User Created', newUser })
   } catch (e) {
     res.status(500).json({ message: 'An error has occured', error: e })
   }
@@ -69,9 +69,9 @@ router.post('/login', async (req, res) => {
         }
         const token = jwt.sign(user, process.env.JWT_SECRET)
         // res.json({ token: token })
-        res.status(200).json({ message: 'USER LOGGED IN', token: token })
+        res.status(200).json({ message: 'USER LOGGED IN', token: token, user })
 
-        console.log('User logged in', token)
+        console.log('User logged in', token, user)
       } else {
         res.status(400).json({ message: 'WRONG PASSWORD, PLEASE CHECK YOUR PASSWORD' })
       }

@@ -15,6 +15,7 @@ const { authUser } = require('./utility/auth')
 
 // Routes
 app.use(require('./routes/User'))
+app.use(require('./routes/Search'))
 app.use(require('./routes/Dashboard', authUser))
 app.use(require('./routes/Game', authUser))
 app.use(require('./routes/Alerts', authUser))
