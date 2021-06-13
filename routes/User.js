@@ -33,7 +33,6 @@ router.post('/register', async (req, res) => {
       email: email,
       password: hashedpassword
     })
-    const savedUser = newUser.save()
 
     res.status(200).json({ message: 'New User Created', newUser })
   } catch (e) {
