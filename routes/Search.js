@@ -25,6 +25,18 @@ router.post('/getStores', async (req, res) => {
   }
 })
 
+router.post('/getDeals', async (req, res) => {
+  try {
+    const storeID = req.body.storeID
+    const apiURL = `https://www.cheapshark.com/api/1.0/deals?storeID=${storeID}`
+    const deals = await axios.get(apiURL)
+    res.status(200).send(deals.data)
+  } catch (e) {
+    console.log(e)
+    res.status(500).json({ message: 'AN UNKNOWN ERROR HAS OCCURED', error: e })
+  }
+})
+
 router.post('/searchTitle', (req, res) => {
   const gameTitle = req.body.gameTitle
 

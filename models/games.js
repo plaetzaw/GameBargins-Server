@@ -1,7 +1,7 @@
-"use strict";
+'use strict'
 module.exports = (sequelize, DataTypes) => {
   const games = sequelize.define(
-    "games",
+    'games',
     {
       title: DataTypes.STRING,
       metacriticLink: DataTypes.STRING,
@@ -23,15 +23,15 @@ module.exports = (sequelize, DataTypes) => {
       thumb: DataTypes.STRING,
       userID: DataTypes.INTEGER,
       steamCheckerBool: DataTypes.BOOLEAN,
-      scoreColor: DataTypes.STRING,
+      scoreColor: DataTypes.STRING
     },
     {}
-  );
+  )
   games.associate = function (models) {
     models.games.belongsTo(models.users, {
-      as: "users",
-      foreignKey: "id",
-    });
-  };
-  return games;
-};
+      as: 'users',
+      foreignKey: 'id'
+    })
+  }
+  return games
+}
