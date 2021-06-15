@@ -7,6 +7,37 @@ const db = require('../models')
 
 router.use(bodyParser.urlencoded({ extended: false }))
 
+router.post('/getAlerts', async (req, res) => {
+  const userID = req.body.userID
+
+  console.log(userID)
+
+  db.alerts
+    .findAll({
+      where: {
+        userID: userID
+      }
+    })
+    .then((alerts) => {
+      res.status(200).json(alerts)
+    })
+    .catch((err) => {
+      console.log(err)
+    })
+
+  // try {
+  //   const alerts = await db.alerts.findAll({
+  //     where: {
+  //       userID: userID
+  //     }
+  //   })
+  //   console.log(alerts)
+  //   res.status(200).json('Here are your alerts', alerts)
+  // } catch (e) {
+  //   res.status(500).json('AN ERROR HAS OCCURED', e)
+  // }
+})
+
 router.post('/setAlert', async (req, res) => {
   const gameID = req.body.gameID
   const email = req.body.email
@@ -35,8 +66,9 @@ router.post('/setAlert', async (req, res) => {
     //   setprice: setprice
     // })
     console.log(setAlertAndSave)
+    res.status(200).json({ message: `Alert set for ${gameID} at ${price} to ${email}` })
   } catch (e) {
-    console.log(e)
+    res.status(500).json({ message: 'An error has occured', error: e })
   }
   // axios
   //   .get(apiURL)
