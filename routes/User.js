@@ -12,7 +12,6 @@ router.use(bodyParser.urlencoded({ extended: false }))
 router.post('/register', async (req, res) => {
   console.log('Beginning user registration')
   const email = req.body.email
-  const moneysaved = 0
   try {
     const checkEmail = await db.users.findOne({
       where: {
@@ -31,7 +30,7 @@ router.post('/register', async (req, res) => {
       username: req.body.username,
       email: email,
       password: hashedpassword,
-      moneysaved: moneysaved
+      moneysaved: 0
     })
     console.log(newUser)
 

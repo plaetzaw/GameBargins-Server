@@ -17,7 +17,7 @@ module.exports = {
       userID: {
         type: Sequelize.INTEGER
       },
-      gameId: {
+      gameID: {
         type: Sequelize.INTEGER
       },
       desiredprice: {
