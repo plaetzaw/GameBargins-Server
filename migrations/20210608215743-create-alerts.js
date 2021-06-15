@@ -14,6 +14,9 @@ module.exports = {
       title: {
         type: Sequelize.STRING
       },
+      userID: {
+        type: Sequelize.INTEGER
+      },
       gameId: {
         type: Sequelize.INTEGER
       },
