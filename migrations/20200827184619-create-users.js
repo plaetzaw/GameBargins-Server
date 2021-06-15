@@ -18,7 +18,7 @@ module.exports = {
         type: Sequelize.STRING
       },
       moneysaved: {
-        type: Sequelize.INTEGER
+        type: Sequelize.FLOAT
       },
       createdAt: {
         allowNull: false,

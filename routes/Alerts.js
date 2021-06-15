@@ -44,7 +44,7 @@ router.post('/setAlert', async (req, res) => {
   const price = req.body.price
   const title = req.body.title
   const userID = req.body.userID
-  const setprice = req.body.salesPrice
+  const setprice = req.body.setprice
   const apiURL = `https://www.cheapshark.com/api/1.0/alerts?action=set&email=${email}&gameID=${gameID}&price=${price}`
   try {
     const setAlertAndSave = await Promise.all([axios.get(apiURL),
@@ -66,7 +66,7 @@ router.post('/setAlert', async (req, res) => {
     //   setprice: setprice
     // })
     console.log(setAlertAndSave)
-    res.status(200).json({ message: `Alert set for ${gameID} at ${price} to ${email}` })
+    res.status(200).json({ message: `Alert set for ${title} ID: ${gameID} at ${price} to ${email}` })
   } catch (e) {
     res.status(500).json({ message: 'An error has occured', error: e })
   }

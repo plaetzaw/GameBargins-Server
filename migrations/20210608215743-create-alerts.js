@@ -21,10 +21,10 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       desiredprice: {
-        type: Sequelize.INTEGER
+        type: Sequelize.FLOAT
       },
       setprice: {
-        type: Sequelize.INTEGER
+        type: Sequelize.FLOAT
       },
       createdAt: {
         allowNull: false,
