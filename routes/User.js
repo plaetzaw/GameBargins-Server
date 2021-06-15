@@ -27,11 +27,10 @@ router.post('/register', async (req, res) => {
     console.log('hashed pass', hashedpassword)
 
     const newUser = await db.users.create({
-      //   firstname: req.body.firstname,
-      //   lastname: req.body.lastname,
       username: req.body.username,
       email: email,
-      password: hashedpassword
+      password: hashedpassword,
+      moneysaved: 0
     })
 
     res.status(200).json({ message: 'New User Created', newUser })

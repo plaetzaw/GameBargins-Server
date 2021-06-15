@@ -53,32 +53,6 @@ router.post('/createFavorite', async (req, res) => {
     }
     const scoreColor = metacriticScoreColor(score)
 
-    // const test = {
-    //   title: title,
-    //   metacriticLink: metacriticLink,
-    //   dealID: dealID,
-    //   storeID: storeID,
-    //   gameID: gameID,
-    //   salePrice: parseFloat(salePrice),
-    //   normalPrice: parseFloat(normalPrice),
-    //   isOnSale: isOnSale,
-    //   savings: parseFloat(savings).toFixed(2),
-    //   metacriticScore: metacriticScore,
-    //   steamRatingText: steamRatingText,
-    //   steamRatingPercent: steamRatingPercent,
-    //   steamRatingCount: steamRatingCount,
-    //   steamAppID: steamAppID,
-    //   releaseDate: releaseDate,
-    //   lastChange: lastChange,
-    //   dealRating: dealRating,
-    //   thumb: thumb,
-    //   userID: userID,
-    //   steamCheckerBool: steamCheckerBool,
-    //   scoreColor: scoreColor
-    // }
-
-    // console.log(JSON.stringify(test, null, 4))
-
     const newGame = await db.games.create({
       title: title,
       metacriticLink: metacriticLink,
@@ -221,9 +195,7 @@ router.post('/getInfoAndFavorite', async (req, res) => {
 })
 
 router.post('/viewFavorites', (req, res) => {
-  console.log(req.body)
   const userID = req.body.userID
-  console.log(userID)
 
   db.games
     .findAll({

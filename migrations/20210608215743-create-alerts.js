@@ -1,4 +1,4 @@
-'use strict';
+'use strict'
 module.exports = {
   up: (queryInterface, Sequelize) => {
     return queryInterface.createTable('alerts', {
@@ -14,8 +14,14 @@ module.exports = {
       title: {
         type: Sequelize.STRING
       },
+      gameId: {
+        type: Sequelize.INTEGER
+      },
       desiredprice: {
-        type: Sequelize.STRING
+        type: Sequelize.INTEGER
+      },
+      setprice: {
+        type: Sequelize.INTEGER
       },
       createdAt: {
         allowNull: false,
@@ -25,9 +31,9 @@ module.exports = {
         allowNull: false,
         type: Sequelize.DATE
       }
-    });
+    })
   },
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('alerts');
+    return queryInterface.dropTable('alerts')
   }
-};
+}

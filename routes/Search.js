@@ -13,7 +13,6 @@ router.post('/getStores', async (req, res) => {
   try {
     const stores = await axios.get(apiURL)
     const activestores = stores.data.filter(store => (store.isActive === 1))
-    console.log(activestores)
 
     // const activestores = stores.filter(store => store.isActive === 1)
     // console.log(activestores)
@@ -67,8 +66,10 @@ router.post('/searchSingleResultTitle', (req, res) => {
 
 router.post('/advancedSearch', (req, res) => {
   const gameTitle = req.body.gameTitle
+  const minPrice = req.body.minPrice
   const maxPrice = req.body.value
-  const onSale = req.body.checked
+  const exactTitleBool = req.body.exactTitle
+  const onSale = req.body.onSale
   let sort = req.body.sort
 
   switch (sort) {
@@ -90,7 +91,6 @@ router.post('/advancedSearch', (req, res) => {
     default:
       sort = 'Price'
   }
-  console.log(sort)
 
   const onSaleChecker = (onSale) => {
     if (onSale === true) {
@@ -102,7 +102,7 @@ router.post('/advancedSearch', (req, res) => {
 
   const onSaleBool = onSaleChecker(onSale)
 
-  const apiURL = `https://www.cheapshark.com/api/1.0/deals?title=${gameTitle}&upperPrice=${maxPrice}&onSale=${onSaleBool}&sortBy=${sort}`
+  const apiURL = `https://www.cheapshark.com/api/1.0/deals?title=${gameTitle}&exact=${exactTitleBool}&lowerPrice=${minPrice}&lupperPrice=${maxPrice}&onSale=${onSaleBool}&sortBy=${sort}`
 
   axios
     .get(apiURL)
