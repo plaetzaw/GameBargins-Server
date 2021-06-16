@@ -22,9 +22,9 @@ router.post('/register', async (req, res) => {
       res.status(400).json({ message: 'EMAIL ALREADY EXSITS, PLEASE SELECT ANOTHER' })
     }
     const password = req.body.password
-    console.log('starting pass', password)
+    // console.log('starting pass', password)
     const hashedpassword = await bcrypt.hash(password, SALT)
-    console.log('hashed pass', hashedpassword)
+    // console.log('hashed pass', hashedpassword)
 
     const newUser = await db.users.create({
       username: req.body.username,
@@ -51,7 +51,7 @@ router.post('/login', async (req, res) => {
         email
       }
     })
-    console.log(checkUser)
+    // console.log(checkUser)
     if (checkUser) {
       console.log('did we get here?')
       const checkPassword = await bcrypt.compare(password, checkUser.password)
@@ -100,8 +100,8 @@ router.post('/updateSavings', async (req, res) => {
       console.log('Incoming savings from FE', savings)
       const addedSavings = checkUser.moneysaved += savings
       console.log('Here are your updated savings', addedSavings)
-      const updateSavings = await db.users.update({
-        moneysaved: addedSavings
+      const updateSavings = await db.users.update({ moneysaved: addedSavings }, {
+        where: { email: email }
       })
       console.log('Here are your total savings', updateSavings)
     }
