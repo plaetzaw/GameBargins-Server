@@ -46,6 +46,7 @@ router.post('/setAlert', async (req, res) => {
   const userID = req.body.userID
   const setprice = req.body.setprice
   const apiURL = `https://www.cheapshark.com/api/1.0/alerts?action=set&email=${email}&gameID=${gameID}&price=${price}`
+
   try {
     const setAlertAndSave = await Promise.all([axios.get(apiURL),
       db.alerts.create({
@@ -65,8 +66,8 @@ router.post('/setAlert', async (req, res) => {
     //   desiredprice: price,
     //   setprice: setprice
     // })
-    console.log(setAlertAndSave)
-    res.status(200).json({ message: `Alert set for ${title} ID: ${gameID} at ${price} to ${email}` })
+    console.log(setAlertAndSave[0].data)
+    res.status(200).json({ message: `Alert set for ${title} at ${price} to ${email}` })
   } catch (e) {
     res.status(500).json({ message: 'An error has occured', error: e })
   }
@@ -79,6 +80,27 @@ router.post('/setAlert', async (req, res) => {
   //       .json({ message: `Alert set for ${gameID} at ${price} to ${email}` })
   //   })
   //   .catch((err) => console.error(err))
+})
+
+router.post('/deleteAlert', async (req, res) => {
+  const id = req.body.id
+  const title = req.body.title
+  const email = req.body.email
+  const price = req.body.desiredprice
+  const gameID = req.body.gameID
+  const apiURL = `https://www.cheapshark.com/api/1.0/alerts?action=delete&email=${email}&gameID=${gameID}&price=${price}`
+  try {
+    await db.alerts.destroy({
+      where: {
+        id: id
+      }
+    })
+    const DeleteAlert = await axios.get(apiURL)
+    console.log(DeleteAlert.data)
+    res.status(200).json({ message: `Alert deleted for ${title} at ${price} to ${email}` })
+  } catch (e) {
+    res.status(500).json({ message: 'There was an error', e })
+  }
 })
 
 module.exports = router
