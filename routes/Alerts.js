@@ -103,4 +103,16 @@ router.post('/deleteAlert', async (req, res) => {
   }
 })
 
+router.post('/sendAlertsToEmail', async (req, res) => {
+  const email = req.body.email
+  const apiURL = `https://www.cheapshark.com/api/1.0/alerts?action=manage&email=${email}`
+  try {
+    const checkForAlerts = await axios.get(apiURL)
+    const AlertsFound = checkForAlerts.data
+    res.status(200).json({ message: AlertsFound })
+  } catch (e) {
+    res.status(500).json({ message: 'AN ERROR HAS OCCURED' })
+  }
+})
+
 module.exports = router
