@@ -60,11 +60,13 @@ router.post('/login', async (req, res) => {
         const username = checkUser.username
         const id = checkUser.id
         const email = checkUser.email
+        const moneysaved = checkUser.moneysaved
 
         const user = {
           id: id,
           name: username,
-          email: email
+          email: email,
+          moneysaved: moneysaved
         }
         const token = jwt.sign(user, process.env.JWT_SECRET)
         // res.json({ token: token })
@@ -81,4 +83,33 @@ router.post('/login', async (req, res) => {
     res.status(500).json({ message: 'AN UNKNOWN ERROR HAS OCCURED', error: e })
   }
 })
+
+router.post('/updateSavings', async (req, res) => {
+  const savings = req.body.savings
+  const email = req.body.email
+  console.log(savings, email)
+
+  console.log('Logging in user', email)
+  try {
+    const checkUser = await db.users.findOne({
+      where: {
+        email
+      }
+    })
+    if (checkUser) {
+      console.log('Incoming savings from FE', savings)
+      const addedSavings = checkUser.moneysaved += savings
+      console.log('Here are your updated savings', addedSavings)
+      const updateSavings = await db.users.update({
+        moneysaved: addedSavings
+      })
+      console.log('Here are your total savings', updateSavings)
+    }
+    res.status(200).json({ message: 'Your savings have been updated', 'Current Savings': checkUser.moneysaved })
+  } catch (e) {
+    res.status(500).json({ message: 'AN UNKNOWN ERROR HAS OCCURED', error: e })
+    console.log(e)
+  }
+})
+
 module.exports = router
