@@ -109,7 +109,8 @@ router.post('/sendAlertsToEmail', async (req, res) => {
   try {
     const checkForAlerts = await axios.get(apiURL)
     const AlertsFound = checkForAlerts.data
-    res.status(200).json({ message: AlertsFound })
+    console.log('Alerts Found?', AlertsFound)
+    res.status(200).json({ message: 'Alert sent to email', AlertsFound })
   } catch (e) {
     res.status(500).json({ message: 'AN ERROR HAS OCCURED' })
   }
