@@ -3,9 +3,11 @@ const express = require('express')
 const router = express.Router()
 const bodyParser = require('body-parser')
 const bcrypt = require('bcrypt')
+const moment = require('moment')
 const SALT = 2
 const jwt = require('jsonwebtoken')
 const db = require('../models')
+const { sequelize } = require('../models')
 
 router.use(bodyParser.urlencoded({ extended: false }))
 
@@ -32,9 +34,12 @@ router.post('/register', async (req, res) => {
       password: hashedpassword,
       moneysaved: 0
     })
+
     console.log(newUser)
 
-    res.status(200).json({ message: 'New User Created', newUser })
+    const token = jwt.sign(newUser, process.env.JWT_SECRET)
+
+    res.status(200).json({ message: 'New User Created', newUser, token: token })
   } catch (e) {
     res.status(500).json({ message: 'An error has occured', error: e })
   }
@@ -69,8 +74,13 @@ router.post('/login', async (req, res) => {
           moneysaved: moneysaved
         }
         const token = jwt.sign(user, process.env.JWT_SECRET)
-        // res.json({ token: token })
-        res.status(200).json({ message: 'USER LOGGED IN', token: token, user })
+        // const days = 1
+        // const cookieExpires = new Date(moment().add(days, 'days').toDate())
+        // These will need to be set to true for production
+        // const cookieOptions = { expires: cookieExpires, httpOnly: false, useHttps: false }
+        res
+          // .cookie('jwt', token, cookieOptions)
+          .status(200).json({ message: 'USER LOGGED IN', token: token, user })
 
         console.log('User logged in', token, user)
       } else {
@@ -81,6 +91,18 @@ router.post('/login', async (req, res) => {
     }
   } catch (e) {
     res.status(500).json({ message: 'AN UNKNOWN ERROR HAS OCCURED', error: e })
+  }
+})
+
+router.post('/Logout', async (req, res) => {
+  try {
+    const LogoutUser = await db.users.findOne({
+      where: {
+        email
+      }
+    })
+  } catch (e) {
+
   }
 })
 
@@ -105,9 +127,28 @@ router.post('/updateSavings', async (req, res) => {
       })
       console.log('Here are your total savings', updateSavings)
     }
-    res.status(200).json({ message: 'Your savings have been updated', 'Current Savings': checkUser.moneysaved })
+    res.sendStatus(200).json({ message: 'Your savings have been updated', 'Current Savings': checkUser.moneysaved })
   } catch (e) {
-    res.status(500).json({ message: 'AN UNKNOWN ERROR HAS OCCURED', error: e })
+    res.sendStatus(500).json({ message: 'AN UNKNOWN ERROR HAS OCCURED', error: e })
+    console.log(e)
+  }
+})
+
+router.post('/me', async (req, res) => {
+  const cookie = req.header.cookie
+})
+
+router.post('/total', async (req, res) => {
+  try {
+    const total = await db.users.findAll({
+      attributes: ['moneysaved',
+        [sequelize.fn('SUM', sequelize.col('moneysaved')), 'total']
+      ],
+      group: ['moneysaved']
+    })
+    console.log(total.dataValues)
+    res.sendStatus(200).json({ message: 'Total SAvings', total })
+  } catch (e) {
     console.log(e)
   }
 })
