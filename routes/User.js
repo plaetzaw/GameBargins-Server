@@ -134,8 +134,9 @@ router.post('/updateSavings', async (req, res) => {
   }
 })
 
-router.post('/me', async (req, res) => {
-  const cookie = req.header.cookie
+router.post('/auth', async (req, res) => {
+  // send the JWT from the header, decode the JWT and check to see if the token matches
+  const cookie = req.cookie
 })
 
 router.post('/total', async (req, res) => {
