@@ -74,12 +74,12 @@ router.post('/login', async (req, res) => {
           moneysaved: moneysaved
         }
         const token = jwt.sign(user, process.env.JWT_SECRET)
-        // const days = 1
-        // const cookieExpires = new Date(moment().add(days, 'days').toDate())
+        const days = 1
+        const cookieExpires = new Date(moment().add(days, 'days').toDate())
         // These will need to be set to true for production
-        // const cookieOptions = { expires: cookieExpires, httpOnly: false, useHttps: false }
+        const cookieOptions = { expires: cookieExpires, httpOnly: false, useHttps: false }
         res
-          // .cookie('jwt', token, cookieOptions)
+          .cookie('jwt', token, cookieOptions)
           .status(200).json({ message: 'USER LOGGED IN', token: token, user })
 
         console.log('User logged in', token, user)
@@ -136,7 +136,13 @@ router.post('/updateSavings', async (req, res) => {
 
 router.post('/auth', async (req, res) => {
   // send the JWT from the header, decode the JWT and check to see if the token matches
-  const cookie = req.cookie
+  console.log('req', req.cookies)
+  console.log('req', req.cookies.jwt)
+  console.log('---')
+  console.log('header? ', req.headers)
+  res
+    // .cookie('jwt', token, cookieOptions)
+    .status(200).json({ message: 'USER LOGGED IN' })
 })
 
 router.post('/total', async (req, res) => {
