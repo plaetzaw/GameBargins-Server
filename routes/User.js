@@ -11,6 +11,12 @@ const { sequelize } = require('../models')
 
 router.use(bodyParser.urlencoded({ extended: false }))
 
+let refreshTokens = []
+
+const generateAccessToken = (user) => {
+  return jwt.sign(user, process.env.JWT_SECRET)
+}
+
 router.post('/register', async (req, res) => {
   console.log('Beginning user registration')
   const email = req.body.email
@@ -73,16 +79,20 @@ router.post('/login', async (req, res) => {
           email: email,
           moneysaved: moneysaved
         }
-        const token = jwt.sign(user, process.env.JWT_SECRET)
         const days = 1
         const cookieExpires = new Date(moment().add(days, 'days').toDate())
+        // const accesstoken = jwt.sign(user, process.env.JWT_SECRET)
+
+        const accesstoken = generateAccessToken(user)
+        const refreshtoken = jwt.sign(user, process.env.REFRESH_SECRET)
+
         // These will need to be set to true for production
         const cookieOptions = { expires: cookieExpires, httpOnly: false, useHttps: false }
+        refreshTokens.push(refreshtoken)
         res
-          .cookie('jwt', token, cookieOptions)
-          .status(200).json({ message: 'USER LOGGED IN', token: token, user })
-
-        console.log('User logged in', token, user)
+          .cookie('jwt', accesstoken, cookieOptions)
+          .cookie('refresh', refreshtoken, cookieOptions)
+          .status(200).json({ message: 'USER LOGGED IN', accesstoken, refreshtoken, user })
       } else {
         res.status(400).json({ message: 'WRONG PASSWORD, PLEASE CHECK YOUR PASSWORD' })
       }
@@ -91,18 +101,6 @@ router.post('/login', async (req, res) => {
     }
   } catch (e) {
     res.status(500).json({ message: 'AN UNKNOWN ERROR HAS OCCURED', error: e })
-  }
-})
-
-router.post('/Logout', async (req, res) => {
-  try {
-    const LogoutUser = await db.users.findOne({
-      where: {
-        email
-      }
-    })
-  } catch (e) {
-
   }
 })
 
@@ -140,9 +138,27 @@ router.post('/auth', async (req, res) => {
   console.log('req', req.cookies.jwt)
   console.log('---')
   console.log('header? ', req.headers)
-  res
-    // .cookie('jwt', token, cookieOptions)
-    .status(200).json({ message: 'USER LOGGED IN' })
+  const refreshtoken = req.cookie.refresh
+  if (refreshtoken === null) return res.sendStatus(401)
+  if (!refreshTokens.includes(refreshtoken)) return res.sendStatus(403)
+  jwt.verify(refreshtoken, process.env.REFRESH_SECRET, (err, user) => {
+    if (err) return res.sendStatus(403)
+    const accesstoken = generateAccessToken(user)
+    res.cookie(accesstoken)
+  })
+
+  res.status(200).json({ message: 'JWT Verified' })
+})
+
+router.delete('/Logout', async (req, res) => {
+  try {
+    const usertoken = req.cookies.jwt
+    refreshTokens = refreshTokens.filter(token => token !== usertoken)
+    res.sendStatus(204)
+  } catch (e) {
+    console.log(e)
+    res.sendStatus(500)
+  }
 })
 
 router.post('/total', async (req, res) => {
