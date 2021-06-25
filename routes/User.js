@@ -11,15 +11,16 @@ const { sequelize } = require('../models')
 
 router.use(bodyParser.urlencoded({ extended: false }))
 
-let refreshTokens = []
+// let refreshTokens = []
 
 const generateAccessToken = (user) => {
   return jwt.sign(user, process.env.JWT_SECRET)
 }
 
 router.post('/register', async (req, res) => {
-  console.log('Beginning user registration')
   const email = req.body.email
+  console.log('Beginning user registration checking email', email)
+
   try {
     const checkEmail = await db.users.findOne({
       where: {
@@ -30,24 +31,37 @@ router.post('/register', async (req, res) => {
       res.status(400).json({ message: 'EMAIL ALREADY EXSITS, PLEASE SELECT ANOTHER' })
     }
     const password = req.body.password
-    // console.log('starting pass', password)
+    console.log('starting pass', password)
     const hashedpassword = await bcrypt.hash(password, SALT)
-    // console.log('hashed pass', hashedpassword)
+    console.log('hashed pass', hashedpassword)
 
-    const newUser = await db.users.create({
+    const NewUserRecord = await db.users.create({
       username: req.body.username,
       email: email,
       password: hashedpassword,
       moneysaved: 0
     })
+    console.log(NewUserRecord)
+    const user = {
+      id: NewUserRecord.id,
+      email: NewUserRecord.email,
+      moneysaved: NewUserRecord.moneysaved
+    }
 
-    console.log(newUser)
+    const days = 1
+    const cookieExpires = new Date(moment().add(days, 'days').toDate())
+    const accesstoken = generateAccessToken(user)
 
-    const token = jwt.sign(newUser, process.env.JWT_SECRET)
+    // These will need to be set to true for production
+    const accesscookieOptions = { expiresIn: cookieExpires, httpOnly: false, useHttps: false }
+    console.log(accesstoken)
 
-    res.status(200).json({ message: 'New User Created', newUser, token: token })
+    res
+      .cookie('jwt', accesstoken, accesscookieOptions)
+      .status(200).json({ message: 'New User Created', user })
   } catch (e) {
     res.status(500).json({ message: 'An error has occured', error: e })
+    console.log(e)
   }
 })
 
@@ -79,20 +93,24 @@ router.post('/login', async (req, res) => {
           email: email,
           moneysaved: moneysaved
         }
+        console.log(user)
         const days = 1
         const cookieExpires = new Date(moment().add(days, 'days').toDate())
         // const accesstoken = jwt.sign(user, process.env.JWT_SECRET)
 
         const accesstoken = generateAccessToken(user)
-        const refreshtoken = jwt.sign(user, process.env.REFRESH_SECRET)
+        // const refreshtoken = jwt.sign(user, process.env.REFRESH_SECRET)
 
         // These will need to be set to true for production
-        const cookieOptions = { expires: cookieExpires, httpOnly: false, useHttps: false }
-        refreshTokens.push(refreshtoken)
+        const accesscookieOptions = { expiresIn: cookieExpires, httpOnly: false, useHttps: false }
+        // const refreshcookieOptions = { expiresIn: cookieExpires, httpOnly: false, useHttps: false }
+
+        // refreshTokens.push(refreshtoken)
+        // console.log(refreshTokens)
         res
-          .cookie('jwt', accesstoken, cookieOptions)
-          .cookie('refresh', refreshtoken, cookieOptions)
-          .status(200).json({ message: 'USER LOGGED IN', accesstoken, refreshtoken, user })
+          .cookie('jwt', accesstoken, accesscookieOptions)
+          // .cookie('refresh', refreshtoken, refreshcookieOptions)
+          .status(200).json({ message: 'USER LOGGED IN', accesstoken, user })
       } else {
         res.status(400).json({ message: 'WRONG PASSWORD, PLEASE CHECK YOUR PASSWORD' })
       }
@@ -134,32 +152,35 @@ router.post('/updateSavings', async (req, res) => {
 
 router.post('/auth', async (req, res) => {
   // send the JWT from the header, decode the JWT and check to see if the token matches
-  console.log('req', req.cookies)
-  console.log('req', req.cookies.jwt)
-  console.log('---')
-  console.log('header? ', req.headers)
-  const refreshtoken = req.cookie.refresh
-  if (refreshtoken === null) return res.sendStatus(401)
-  if (!refreshTokens.includes(refreshtoken)) return res.sendStatus(403)
-  jwt.verify(refreshtoken, process.env.REFRESH_SECRET, (err, user) => {
-    if (err) return res.sendStatus(403)
-    const accesstoken = generateAccessToken(user)
-    res.cookie(accesstoken)
-  })
-
+  console.log('show me cookies', req.cookies)
+  console.log(req.cookies.jwt)
+  // console.log(req.cookies.refresh)
+  // console.log('req', req.cookies.jwt)
+  // console.log('---')
+  // console.log('header? ', req.headers)
+  // const refreshtoken = req.cookies.refresh
+  // if (refreshtoken === null) return res.sendStatus(401)
+  // if (!refreshTokens.includes(refreshtoken)) return res.sendStatus(403)
+  // jwt.verify(refreshtoken, process.env.REFRESH_SECRET, (err, user) => {
+  //   if (err) return res.sendStatus(403)
+  //   const accesstoken = generateAccessToken(user)
+  // res.cookie(accesstoken)
   res.status(200).json({ message: 'JWT Verified' })
+  // })
+  // res.sendStatus(500)
 })
 
-router.delete('/Logout', async (req, res) => {
-  try {
-    const usertoken = req.cookies.jwt
-    refreshTokens = refreshTokens.filter(token => token !== usertoken)
-    res.sendStatus(204)
-  } catch (e) {
-    console.log(e)
-    res.sendStatus(500)
-  }
-})
+// router.post('/Logout', async (req, res) => {
+//   console.log('firing logout')
+//   try {
+//     const usertoken = req.cookies.jwt
+//     refreshTokens = refreshTokens.filter(token => token !== usertoken)
+//     res.sendStatus(204)
+//   } catch (e) {
+//     console.log(e)
+//     res.sendStatus(500)
+//   }
+// })
 
 router.post('/total', async (req, res) => {
   try {
