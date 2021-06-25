@@ -58,7 +58,7 @@ router.post('/register', async (req, res) => {
 
     res
       .cookie('jwt', accesstoken, accesscookieOptions)
-      .status(200).json({ message: 'New User Created', user })
+      .status(200).json({ message: 'New User Created', accesstoken, user })
   } catch (e) {
     res.status(500).json({ message: 'An error has occured', error: e })
     console.log(e)
