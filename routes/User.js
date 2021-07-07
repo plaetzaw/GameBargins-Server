@@ -102,7 +102,7 @@ router.post('/login', async (req, res) => {
         // const refreshtoken = jwt.sign(user, process.env.REFRESH_SECRET)
 
         // These will need to be set to true for production
-        const accesscookieOptions = { expiresIn: cookieExpires, httpOnly: true, useHttps: true }
+        const accesscookieOptions = { expiresIn: cookieExpires, httpOnly: false, useHttps: false }
         // const refreshcookieOptions = { expiresIn: cookieExpires, httpOnly: false, useHttps: false }
 
         // refreshTokens.push(refreshtoken)
