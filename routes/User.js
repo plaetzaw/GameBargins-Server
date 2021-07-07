@@ -8,6 +8,7 @@ const SALT = 2
 const jwt = require('jsonwebtoken')
 const db = require('../models')
 const { sequelize } = require('../models')
+const jwtDecode = require('jwt-decode')
 
 router.use(bodyParser.urlencoded({ extended: false }))
 
@@ -53,7 +54,7 @@ router.post('/register', async (req, res) => {
     const accesstoken = generateAccessToken(user)
 
     // These will need to be set to true for production
-    const accesscookieOptions = { expiresIn: cookieExpires, httpOnly: true, useHttps: true, sameSite: 'None', secure: true }
+    const accesscookieOptions = { expiresIn: cookieExpires, httpOnly: false, useHttps: true, sameSite: 'None', secure: true }
     console.log(accesstoken)
 
     res
@@ -102,7 +103,7 @@ router.post('/login', async (req, res) => {
         // const refreshtoken = jwt.sign(user, process.env.REFRESH_SECRET)
 
         // These will need to be set to true for production
-        const accesscookieOptions = { expiresIn: cookieExpires, httpOnly: true, useHttps: true, sameSite: 'None', secure: true }
+        const accesscookieOptions = { expiresIn: cookieExpires, httpOnly: process.env.HTTP_ONLY, useHttps: process.env.USE_HTTPS, sameSite: 'None', secure: true }
         // const refreshcookieOptions = { expiresIn: cookieExpires, httpOnly: false, useHttps: false }
 
         // refreshTokens.push(refreshtoken)
@@ -152,22 +153,13 @@ router.post('/updateSavings', async (req, res) => {
 
 router.post('/auth', async (req, res) => {
   // send the JWT from the header, decode the JWT and check to see if the token matches
-  console.log('show me cookies', req.cookies)
-  console.log(req.cookies.jwt)
+  console.log('show me cookies', req.cookies.jwt)
+  const jwt = req.cookies.jwt
+  const userdata = jwtDecode(jwt)
+  console.log(userdata)
+
   // console.log(req.cookies.refresh)
-  // console.log('req', req.cookies.jwt)
-  // console.log('---')
-  // console.log('header? ', req.headers)
-  // const refreshtoken = req.cookies.refresh
-  // if (refreshtoken === null) return res.sendStatus(401)
-  // if (!refreshTokens.includes(refreshtoken)) return res.sendStatus(403)
-  // jwt.verify(refreshtoken, process.env.REFRESH_SECRET, (err, user) => {
-  //   if (err) return res.sendStatus(403)
-  //   const accesstoken = generateAccessToken(user)
-  // res.cookie(accesstoken)
-  res.status(200).json({ message: 'JWT Verified' })
-  // })
-  // res.sendStatus(500)
+  res.status(200).json({ message: 'JWT Verified', userdata })
 })
 
 // router.post('/Logout', async (req, res) => {
