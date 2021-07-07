@@ -53,7 +53,7 @@ router.post('/register', async (req, res) => {
     const accesstoken = generateAccessToken(user)
 
     // These will need to be set to true for production
-    const accesscookieOptions = { expiresIn: cookieExpires, httpOnly: false, useHttps: false }
+    const accesscookieOptions = { expiresIn: cookieExpires, httpOnly: true, useHttps: true }
     console.log(accesstoken)
 
     res
@@ -102,7 +102,7 @@ router.post('/login', async (req, res) => {
         // const refreshtoken = jwt.sign(user, process.env.REFRESH_SECRET)
 
         // These will need to be set to true for production
-        const accesscookieOptions = { expiresIn: cookieExpires, httpOnly: false, useHttps: false }
+        const accesscookieOptions = { expiresIn: cookieExpires, httpOnly: true, useHttps: true }
         // const refreshcookieOptions = { expiresIn: cookieExpires, httpOnly: false, useHttps: false }
 
         // refreshTokens.push(refreshtoken)
