@@ -8,9 +8,7 @@ const PORT = process.env.PORT || 8080
 
 require('dotenv').config()
 
-// app.use(cors())
 app.use(cors({ origin: process.env.FRONTEND_URL, credentials: true }))
-// app.use(cors({ origin: 'https://gamebargins.netlify.app/', credentials: true }))
 
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))

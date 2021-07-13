@@ -162,17 +162,12 @@ router.post('/auth', async (req, res) => {
   res.status(200).json({ message: 'JWT Verified', userdata })
 })
 
-// router.post('/Logout', async (req, res) => {
-//   console.log('firing logout')
-//   try {
-//     const usertoken = req.cookies.jwt
-//     refreshTokens = refreshTokens.filter(token => token !== usertoken)
-//     res.sendStatus(204)
-//   } catch (e) {
-//     console.log(e)
-//     res.sendStatus(500)
-//   }
-// })
+router.get('/logout', (req, res) => {
+  console.log('checking cookies', req.cookies)
+  const domain = process.env.SITE_DOMAIN
+  res.clearCookie('jwt', { path: '/', domain: domain })
+  res.redirect(process.env.FRONTEND_URL + '/')
+})
 
 router.post('/total', async (req, res) => {
   try {
