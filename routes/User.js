@@ -156,6 +156,9 @@ router.post('/auth', async (req, res) => {
   // send the JWT from the header, decode the JWT and check to see if the token matches
   console.log('show me cookies', req.cookies.jwt)
   const jwt = req.cookies.jwt
+  if (!jwt) {
+    res.sendStatus(201)({ message: 'User does not have JWT' })
+  }
   const userdata = jwtDecode(jwt)
   console.log(userdata)
 
