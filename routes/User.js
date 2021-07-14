@@ -108,9 +108,10 @@ router.post('/login', async (req, res) => {
 
         // refreshTokens.push(refreshtoken)
         // console.log(refreshTokens)
+        console.log('checking cookies', accesstoken)
+
         res
           .cookie('jwt', accesstoken, accesscookieOptions)
-          // .cookie('refresh', refreshtoken, refreshcookieOptions)
           .status(200).json({ message: 'USER LOGGED IN', accesstoken, user })
       } else {
         res.status(400).json({ message: 'WRONG PASSWORD, PLEASE CHECK YOUR PASSWORD' })
@@ -164,8 +165,7 @@ router.post('/auth', async (req, res) => {
 
 router.get('/logout', (req, res) => {
   console.log('checking cookies', req.cookies)
-  const domain = process.env.SITE_DOMAIN
-  res.clearCookie('jwt', { path: '/', domain: domain })
+  res.clearCookie('jwt', { path: '/' })
   res.redirect(process.env.FRONTEND_URL + '/')
 })
 
