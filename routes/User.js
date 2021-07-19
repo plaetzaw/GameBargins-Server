@@ -45,6 +45,7 @@ router.post('/register', async (req, res) => {
     console.log(NewUserRecord)
     const user = {
       id: NewUserRecord.id,
+      name: NewUserRecord.username,
       email: NewUserRecord.email,
       moneysaved: NewUserRecord.moneysaved
     }
