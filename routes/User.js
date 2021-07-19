@@ -157,7 +157,7 @@ router.post('/auth', async (req, res) => {
   console.log('show me cookies', req.cookies.jwt)
   const jwt = req.cookies.jwt
   if (!jwt) {
-    res.sendStatus(201)({ message: 'User does not have JWT' })
+    res.sendStatus(201).json({ message: 'User does not have JWT' })
   }
   const userdata = jwtDecode(jwt)
   console.log(userdata)
